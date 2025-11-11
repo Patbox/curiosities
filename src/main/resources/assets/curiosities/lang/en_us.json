@@ -1,0 +1,32 @@
+{
+    "item.curiosities.phaser": "Phaser",
+    "item.curiosities.phaser.desc.1": "Use on solid, full block to convert it into Phasing Block",
+    "item.curiosities.phaser.desc.2": "When interacted with or powered by redstone,",
+    "item.curiosities.phaser.desc.3": "the block will temporarily vanish.",
+    "item.curiosities.slime_bucket": "Bucket of Slime",
+
+
+    "block.curiosities.phasing_block": "Phasing Block",
+
+
+    "block.curiosities.white_elevator": "White Elevator",
+    "block.curiosities.orange_elevator": "Orange Elevator",
+    "block.curiosities.magenta_elevator": "Magenta Elevator",
+    "block.curiosities.light_blue_elevator": "Light Blue Elevator",
+    "block.curiosities.yellow_elevator": "Yellow Elevator",
+    "block.curiosities.lime_elevator": "Lime Elevator",
+    "block.curiosities.pink_elevator": "Pink Elevator",
+    "block.curiosities.gray_elevator": "Gray Elevator",
+    "block.curiosities.light_gray_elevator": "Light Gray Elevator",
+    "block.curiosities.cyan_elevator": "Cyan Elevator",
+    "block.curiosities.purple_elevator": "Purple Elevator",
+    "block.curiosities.blue_elevator": "Blue Elevator",
+    "block.curiosities.brown_elevator": "Brown Elevator",
+    "block.curiosities.green_elevator": "Green Elevator",
+    "block.curiosities.red_elevator": "Red Elevator",
+    "block.curiosities.black_elevator": "Black Elevator",
+
+
+    "subtitles.curiosities.block.phasing.pop_out": "Block vanishes",
+    "subtitles.curiosities.block.phasing.pop_in": "Block pops in"
+}

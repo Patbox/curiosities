@@ -1,0 +1,56 @@
+{
+  "block.phasing.pop_out": {
+    "sounds": [
+      {
+        "name": "liquid/lavapop",
+        "volume": 0.8,
+        "pitch": 1.2
+      }
+    ],
+    "subtitle": "subtitles.curiosities.block.phasing.pop_out"
+  },
+  "block.phasing.pop_in": {
+    "sounds": [
+      {
+        "name": "liquid/lavapop",
+        "volume": 0.8,
+        "pitch": 1.1
+      }
+    ],
+    "subtitle": "subtitles.curiosities.block.phasing.pop_in"
+  },
+  "item.bucket.slime.fill": {
+    "sounds": [
+      {
+        "name": "item/bucket/fill1",
+        "pitch": 0.7
+      },
+      {
+        "name": "item/bucket/fill2",
+        "pitch": 0.7
+      },
+      {
+        "name": "item/bucket/fill3",
+        "pitch": 0.7
+      }
+    ],
+    "subtitle": "subtitles.item.bucket.fill"
+  },
+  "item.bucket.slime.empty": {
+    "sounds": [
+      {
+        "name": "item/bucket/empty1",
+        "pitch": 0.7
+      },
+      {
+        "name": "item/bucket/empty2",
+        "pitch": 0.7
+      },
+      {
+        "name": "item/bucket/empty3",
+        "pitch": 0.7
+      }
+    ],
+    "subtitle": "subtitles.item.bucket.empty"
+  }
+}
