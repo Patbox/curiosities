@@ -5,14 +5,14 @@
 	"name": "Curiosities!",
 	"description": "Mod adding disconnected assortment of things I found neat.",
 	"authors": [
-		"Me!"
+		"Patbox"
 	],
 	"contact": {
 		"homepage": "https://pb4.eu",
 		"sources": "https://github.com/patbox/curiosities"
 	},
-	"license": "?",
-	"icon": "assets/curiosities/icon.png",
+	"license": "LGPLv3",
+	"icon": "assets/curiosities/textures/item/phaser.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
@@ -26,7 +26,7 @@
 		"curiosities.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.17.3",
+		"fabricloader": ">=0.17.0",
 		"minecraft": "~1.21.10",
 		"java": ">=21",
 		"fabric-api": "*",

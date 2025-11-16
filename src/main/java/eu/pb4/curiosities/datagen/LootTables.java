@@ -23,5 +23,10 @@ class LootTables extends FabricBlockLootTableProvider {
     @Override
     public void generate() {
         this.dropOther(CuriositiesBlocks.PHASING_BLOCK, CuriositiesItems.PHASER);
+        this.dropSelf(CuriositiesBlocks.ANGEL_BLOCK);
+        this.dropSelf(CuriositiesBlocks.INVISIBLE_PRESSURE_PLATE);
+        this.dropSelf(CuriositiesBlocks.CROSS_RAIL);
+        this.dropSelf(CuriositiesBlocks.ELEVATOR);
+        CuriositiesBlocks.COLORED_ELEVATOR.values().forEach(this::dropSelf);
     }
 }

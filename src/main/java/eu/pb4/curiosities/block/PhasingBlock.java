@@ -3,8 +3,10 @@ package eu.pb4.curiosities.block;
 import com.mojang.serialization.MapCodec;
 import eu.pb4.curiosities.item.CuriositiesItems;
 import eu.pb4.curiosities.other.CuriositiesSoundEvents;
+import eu.pb4.curiosities.other.ProxyAttachement;
 import eu.pb4.factorytools.api.block.FactoryBlock;
 import eu.pb4.factorytools.api.virtualentity.BlockModel;
+import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockAwareAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.HolderAttachment;
@@ -110,6 +112,14 @@ public class PhasingBlock extends BaseEntityBlock implements FactoryBlock {
         }
 
         return super.updateShape(state, level, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
+    }
+
+    @Override
+    protected ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
+        if (includeData) {
+            return CuriositiesItems.PHASER.getDefaultInstance();
+        }
+        return level.getBlockEntity(pos) instanceof PhasingBlockEntity be ? be.getVisualState().getCloneItemStack(level, pos, false) : CuriositiesItems.PHASER.getDefaultInstance();
     }
 
     @Override
@@ -229,8 +239,13 @@ public class PhasingBlock extends BaseEntityBlock implements FactoryBlock {
         private final BlockDisplayElement base = new BlockDisplayElement();
         private BlockState state = Blocks.STONE.defaultBlockState();
 
+        @Nullable
+        private ProxyAttachement proxied;
+        private boolean visible = false;
+
         public Model(BlockState currentState) {
             this.base.setTranslation(new Vector3f(-0.5f));
+            this.base.setInvisible(true);
             this.base.setBlockState(currentState.getValue(PHASE) == Phase.ACTIVE ? Blocks.AIR.defaultBlockState() : this.state);
 
             this.addElement(base);
@@ -240,8 +255,7 @@ public class PhasingBlock extends BaseEntityBlock implements FactoryBlock {
         public void notifyUpdate(HolderAttachment.UpdateType updateType) {
             super.notifyUpdate(updateType);
             if (updateType == BlockAwareAttachment.BLOCK_STATE_UPDATE) {
-                this.base.setBlockState(this.blockState().getValue(PHASE) == Phase.ACTIVE ? Blocks.AIR.defaultBlockState() : this.state);
-                this.base.tick();
+                this.setVisible(this.blockState().getValue(PHASE) != Phase.ACTIVE);
             }
         }
 
@@ -250,10 +264,43 @@ public class PhasingBlock extends BaseEntityBlock implements FactoryBlock {
                 return;
             }
             this.state = blockState;
-            if (this.blockState().getValue(PHASE) != Phase.ACTIVE) {
-                this.base.setBlockState(blockState);
-                this.base.tick();
+            this.visible = false;
+            this.setVisible(this.blockState().getValue(PHASE) != Phase.ACTIVE);
+        }
+
+        private void setVisible(boolean visible) {
+            if (this.visible == visible) {
+                return;
             }
+            this.visible = visible;
+
+            if (!visible) {
+                this.base.setBlockState(Blocks.AIR.defaultBlockState());
+                if (this.proxied != null) {
+                    this.removeElement(this.proxied);
+                    this.proxied = null;
+                }
+                this.tick();
+                return;
+            }
+            this.base.setBlockState(this.state);
+
+            var elementHolderCreator = BlockWithElementHolder.get(this.state);
+            if (this.proxied != null) {
+                this.removeElement(this.proxied);
+                this.proxied = null;
+            }
+
+            if (elementHolderCreator != null) {
+                var elementHolder = elementHolderCreator.createElementHolder(this.getAttachment().getWorld(), this.blockPos(), this.state);
+                if (elementHolder != null) {
+                    this.proxied = new ProxyAttachement(this, elementHolder, () -> this.state);
+                    elementHolder.setAttachment(this.proxied);
+                    this.addElement(proxied);
+                }
+            }
+
+            this.tick();
         }
     }
 

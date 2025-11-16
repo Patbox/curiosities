@@ -28,7 +28,7 @@ public class ModInit implements ModInitializer {
 		CuriositiesBlockEntities.init();
 
 		PolymerResourcePackUtils.addModAssets(MOD_ID);
-		//ResourcePackExtras.forDefault().addBridgedModelsFolder(id("block"));
+		ResourcePackExtras.forDefault().addBridgedModelsFolder(id("block"));
 	}
 
 	public static final Identifier id(String path) {

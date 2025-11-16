@@ -3,6 +3,11 @@
   "package": "eu.pb4.curiosities.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "LivingEntityMixin",
+    "NewMinecartBehaviorMixin",
+    "OldMinecartBehaviorMixin",
+    "PropertiesAccessor",
+    "RailStateMixin",
     "ServerPlayerMixin"
   ],
   "injectors": {

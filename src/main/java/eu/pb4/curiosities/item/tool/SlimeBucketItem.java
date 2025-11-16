@@ -1,5 +1,6 @@
-package eu.pb4.curiosities.item;
+package eu.pb4.curiosities.item.tool;
 
+import eu.pb4.curiosities.item.CuriositiesDataComponents;
 import eu.pb4.curiosities.other.CuriositiesSoundEvents;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;

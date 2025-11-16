@@ -19,6 +19,14 @@
     ],
     "subtitle": "subtitles.curiosities.block.phasing.pop_in"
   },
+  "block.elevator.modify": {
+    "sounds": [
+      {
+        "name": "note/hat",
+        "pitch": 1.2
+      }
+    ]
+  },
   "item.bucket.slime.fill": {
     "sounds": [
       {

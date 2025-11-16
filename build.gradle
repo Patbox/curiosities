@@ -1,5 +1,6 @@
 plugins {
 	id 'fabric-loom' version "${loom_version}"
+	id "com.modrinth.minotaur" version "2.+"
 	id 'maven-publish'
 }
 
@@ -8,6 +9,16 @@ group = project.maven_group
 
 base {
 	archivesName = project.archives_base_name
+}
+
+if (System.getenv("CI") != null) {
+	if (System.getenv("RELEASE") != null) {
+		version = project.mod_version
+	} else {
+		version = project.mod_version + "-dev.build." + System.getenv("GITHUB_RUN_NUMBER")
+	}
+} else {
+	version = project.mod_version + "-dev.local"
 }
 
 repositories {
@@ -59,6 +70,7 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	modImplementation "eu.pb4:polymer-core:${project.polymer_version}"
+	modImplementation "eu.pb4:polymer-blocks:${project.polymer_version}"
 	modImplementation "eu.pb4:polymer-resource-pack:${project.polymer_version}"
 	modImplementation "eu.pb4:polymer-resource-pack-extras:${project.polymer_version}"
 	modImplementation "eu.pb4:polymer-virtual-entity:${project.polymer_version}"
@@ -114,5 +126,26 @@ publishing {
 		// Notice: This block does NOT have the same function as the block in the top level.
 		// The repositories here will be used for publishing your artifact, not for
 		// retrieving dependencies.
+	}
+}
+
+if (System.getenv("MODRINTH")) {
+	modrinth {
+		token = System.getenv("MODRINTH")
+		projectId = 'fyJKRz1B'// The ID of your modrinth project, slugs will not work.
+		versionNumber = "" + version // The version of the mod to upload.
+		versionType = "release"
+		uploadFile = remapJar // This links to a task that builds your mod jar and sets "uploadFile" to the mod jar.
+		gameVersions = [((String) project.minecraft_version)]
+		changelog = System.getenv("CHANGELOG")
+		loaders = ["fabric"/*, "quilt"*/]
+
+		dependencies {
+			required.project "polymer"
+		}
+	}
+
+	remapJar {
+		finalizedBy project.tasks.modrinth
 	}
 }

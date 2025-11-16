@@ -4,11 +4,16 @@
     "item.curiosities.phaser.desc.2": "When interacted with or powered by redstone,",
     "item.curiosities.phaser.desc.3": "the block will temporarily vanish.",
     "item.curiosities.slime_bucket": "Bucket of Slime",
-
+    "item.curiosities.crafting_slate": "Crafting Slate",
+    "item.curiosities.slime_boots": "Slime Boots",
 
     "block.curiosities.phasing_block": "Phasing Block",
+    "block.curiosities.angel_block": "Angel Block",
+    "block.curiosities.angel_block.desc": "Can be placed mid air",
+    "block.curiosities.invisible_pressure_plate": "Invisible Pressure Plate",
+    "block.curiosities.cross_rail": "Cross Rail",
 
-
+    "block.curiosities.elevator": "Elevator",
     "block.curiosities.white_elevator": "White Elevator",
     "block.curiosities.orange_elevator": "Orange Elevator",
     "block.curiosities.magenta_elevator": "Magenta Elevator",
