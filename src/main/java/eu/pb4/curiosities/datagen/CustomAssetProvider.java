@@ -108,7 +108,7 @@ record CustomAssetProvider(FabricDataOutput output) implements DataProvider {
                     .parent(Identifier.withDefaultNamespace("block/cube_bottom_top"))
                     .texture("top", "curiosities:block/elevator_top" + variant)
                     .texture("side", "curiosities:block/elevator_side")
-                    .texture("bottom", "#top")
+                    .texture("bottom", "curiosities:block/elevator_top")
                     .build().toBytes()
             );
 
@@ -117,7 +117,7 @@ record CustomAssetProvider(FabricDataOutput output) implements DataProvider {
                         .parent(Identifier.withDefaultNamespace("block/cube_bottom_top"))
                         .texture("top", "curiosities:block/elevator_top" + variant + "_" + color.getSerializedName())
                         .texture("side", "curiosities:block/elevator_side_" + color.getSerializedName())
-                        .texture("bottom", "#top")
+                        .texture("bottom", "curiosities:block/elevator_top_" + color.getSerializedName())
                         .build().toBytes()
                 );
             }

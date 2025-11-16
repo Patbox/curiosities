@@ -1,6 +1,7 @@
 package eu.pb4.curiosities.item.tool;
 
 import eu.pb4.polymer.core.api.item.SimplePolymerItem;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetCursorItemPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,6 +19,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
+import java.util.function.BiFunction;
 
 public class CraftingSlateItem extends SimplePolymerItem {
     public CraftingSlateItem(Properties settings) {
@@ -45,7 +49,17 @@ public class CraftingSlateItem extends SimplePolymerItem {
         player.openMenu(new MenuProvider() {
             @Override
             public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
-                return new CraftingMenu(containerId, playerInventory);
+                return new CraftingMenu(containerId, playerInventory, new ContainerLevelAccess() {
+                    @Override
+                    public <T> Optional<T> evaluate(BiFunction<Level, BlockPos, T> levelPosConsumer) {
+                        return Optional.of(levelPosConsumer.apply(level, player.blockPosition()));
+                    }
+                }) {
+                    @Override
+                    public boolean stillValid(Player player) {
+                        return player.isAlive();
+                    }
+                };
             }
 
             @Override
