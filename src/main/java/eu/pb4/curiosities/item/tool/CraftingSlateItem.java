@@ -4,6 +4,7 @@ import eu.pb4.polymer.core.api.item.SimplePolymerItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetCursorItemPacket;
+import net.minecraft.network.protocol.game.ClientboundSoundEntityPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -72,7 +73,9 @@ public class CraftingSlateItem extends SimplePolymerItem {
                 return false;
             }
         });
-        serverPlayer.playNotifySound(SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.PLAYERS, 0.5f, 1f);
+        serverPlayer.connection.send(new ClientboundSoundEntityPacket(
+                SoundEvents.UI_BUTTON_CLICK, SoundSource.PLAYERS, player,0.5f, 1, player.getRandom().nextLong()
+        ));
         return InteractionResult.SUCCESS_SERVER;
     }
 }

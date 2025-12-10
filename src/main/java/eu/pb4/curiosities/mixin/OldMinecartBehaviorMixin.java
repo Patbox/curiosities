@@ -6,9 +6,9 @@ import eu.pb4.curiosities.block.CrossRailBlock;
 import eu.pb4.curiosities.block.CuriositiesBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.vehicle.AbstractMinecart;
-import net.minecraft.world.entity.vehicle.MinecartBehavior;
-import net.minecraft.world.entity.vehicle.OldMinecartBehavior;
+import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.minecart.MinecartBehavior;
+import net.minecraft.world.entity.vehicle.minecart.OldMinecartBehavior;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -32,7 +32,7 @@ public abstract class OldMinecartBehaviorMixin extends MinecartBehavior {
         return original;
     }
 
-    @Inject(method = "moveAlongTrack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/vehicle/AbstractMinecart;resetFallDistance()V"))
+    @Inject(method = "moveAlongTrack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/vehicle/minecart/AbstractMinecart;resetFallDistance()V"))
     private void storePosition(ServerLevel level, CallbackInfo ci, @Local BlockPos pos, @Local BlockState state) {
         if (!state.is(CuriositiesBlocks.CROSS_RAIL)) {
             this.previousDirectionalRailPos = pos;

@@ -63,7 +63,6 @@ dependencies {
 	mappings loom.layered {
 		officialMojangMappings()
 		parchment("org.parchmentmc.data:parchment-1.21.10:2025.10.12@zip")
-		mappings("dev.lambdaurora:yalmm-mojbackward:1.21.10+build.2")
 	}
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
