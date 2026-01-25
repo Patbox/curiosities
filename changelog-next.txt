@@ -1,0 +1,13 @@
+- Added Slime Boots:
+  - Crafted with 4 Slime Balls and Leather Boots.
+  - When falling from 1.5+ blocks, entity wearing them will bounce like on a Slime Block.
+  - Fall damage will be converted to item damage.
+  - It's max durability is 65 and provides one point of defense.
+- Added Mining Helmet:
+  - Crafted with 2 Copper Ingots, a Torch, a Glass Block and a Copper Helmet.
+  - When worn, entity will emit light level of 10.
+  - Has same defense and durability as Copper Helmet.
+- Added Minecart with Jukebox:
+  - Crafted with a Minecart and a Jukebox.
+  - Works just like regular Jukebox, but it moves on rails!
+- Fixed blocks being invisible through block target selection.

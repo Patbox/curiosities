@@ -3,33 +3,33 @@ package eu.pb4.curiosities.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import eu.pb4.curiosities.item.CuriositiesItems;
-import net.minecraft.network.protocol.game.ClientboundEntityPositionSyncPacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
+import eu.pb4.curiosities.other.EntityLightEngine;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ThreadedLevelLightEngine;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Set;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
+    @Unique
+    @Nullable
+    private BlockPos lastLightPos;
+
     public LivingEntityMixin(EntityType<?> type, Level level) {
         super(type, level);
     }
 
     @Shadow public abstract ItemStack getItemBySlot(EquipmentSlot slot);
-
-    @Shadow protected abstract double getEffectiveGravity();
 
     @Inject(method = "causeFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", shift = At.Shift.BEFORE), cancellable = true)
     private void handleSlimeBoots(double fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir, @Local LocalIntRef damage) {
@@ -40,27 +40,59 @@ public abstract class LivingEntityMixin extends Entity {
         var previousDamage = stack.getDamageValue();
         var maxDamage = stack.getMaxDamage();
         stack.hurtAndBreak(damage.get(), (LivingEntity) (Object) this, EquipmentSlot.FEET);
-        float bounce = 1;
         if (stack.isEmpty()) {
-            bounce = (maxDamage - previousDamage) / (float) damage.get();
             damage.set((maxDamage - previousDamage) - damage.get());
         } else {
             cir.setReturnValue(false);
         }
-        this.playSound(SoundEvents.SLIME_BLOCK_FALL, 1.0F, 1.0F);
+    }
 
-        var velocity = this.getDeltaMovement();
-        if (velocity.y < 0.0) {
-            this.setDeltaMovement(velocity.x, -velocity.y * bounce, velocity.z);
-            if (((Object) this) instanceof ServerPlayer serverPlayer) {
-                var gravity = this.getEffectiveGravity();
-                var time = Math.sqrt(fallDistance / gravity * 2);
+    @Inject(method = "baseTick", at = @At("HEAD"))
+    private void handleMinerHelmet(CallbackInfo ci) {
+        var engine = (EntityLightEngine) ((LevelLightEngineAccessor) this.level().getLightEngine()).getBlockEngine();
 
-                serverPlayer.connection.send(new ClientboundPlayerPositionPacket(0,
-                        new PositionMoveRotation(Vec3.ZERO, new Vec3(0, time * gravity * Math.pow(0.98, time), 0), 0, 0),
-                        Set.of(Relative.DELTA_X, Relative.DELTA_Z, Relative.X, Relative.Y, Relative.Z, Relative.X_ROT, Relative.Y_ROT)
-                        ));
+        if (engine == null) {
+            return;
+        }
+
+        var hasMinerHelmet = this.getItemBySlot(EquipmentSlot.HEAD).is(CuriositiesItems.MINING_HELMET);
+        var pos = BlockPos.containing(this.getEyePosition());
+        if (hasMinerHelmet && !pos.equals(this.lastLightPos)) {
+            engine.curiosities$setLightLevel(pos, 10);
+            if (this.lastLightPos != null) {
+                engine.curiosities$setLightLevel(this.lastLightPos, 0);
+                this.level().getLightEngine().checkBlock(this.lastLightPos);
             }
+            this.level().getLightEngine().checkBlock(pos);
+            if (this.level().getLightEngine() instanceof ThreadedLevelLightEngine levelLightEngine) {
+                levelLightEngine.tryScheduleUpdate();
+            }
+            this.lastLightPos = pos;
+        } else if (!hasMinerHelmet && this.lastLightPos != null) {
+            engine.curiosities$setLightLevel(this.lastLightPos, 0);
+            this.level().getLightEngine().checkBlock(this.lastLightPos);
+            if (this.level().getLightEngine() instanceof ThreadedLevelLightEngine levelLightEngine) {
+                levelLightEngine.tryScheduleUpdate();
+            }
+            this.lastLightPos = null;
+        }
+    }
+
+    @Inject(method = "onRemoval", at = @At("HEAD"))
+    private void clearOldLight(RemovalReason reason, CallbackInfo ci) {
+        var engine = (EntityLightEngine) ((LevelLightEngineAccessor) this.level().getLightEngine()).getBlockEngine();
+
+        if (engine == null) {
+            return;
+        }
+
+        if (this.lastLightPos != null) {
+            engine.curiosities$setLightLevel(this.lastLightPos, 0);
+            this.level().getLightEngine().checkBlock(this.lastLightPos);
+            if (this.level().getLightEngine() instanceof ThreadedLevelLightEngine levelLightEngine) {
+                levelLightEngine.tryScheduleUpdate();
+            }
+            this.lastLightPos = null;
         }
     }
 }

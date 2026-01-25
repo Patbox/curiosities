@@ -1,6 +1,7 @@
 package eu.pb4.curiosities;
 
 import eu.pb4.curiosities.block.CuriositiesBlockEntities;
+import eu.pb4.curiosities.entity.CuriositiesEntities;
 import eu.pb4.curiosities.item.CuriositiesDataComponents;
 import eu.pb4.curiosities.other.CuriositiesSoundEvents;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
@@ -26,6 +27,7 @@ public class ModInit implements ModInitializer {
 		CuriositiesBlocks.init();
 		CuriositiesItems.init();
 		CuriositiesBlockEntities.init();
+		CuriositiesEntities.init();
 
 		PolymerResourcePackUtils.addModAssets(MOD_ID);
 		ResourcePackExtras.forDefault().addBridgedModelsFolder(id("block"));

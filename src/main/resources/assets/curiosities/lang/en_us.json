@@ -6,6 +6,8 @@
     "item.curiosities.slime_bucket": "Bucket of Slime",
     "item.curiosities.crafting_slate": "Crafting Slate",
     "item.curiosities.slime_boots": "Slime Boots",
+    "item.curiosities.mining_helmet": "Mining Helmet",
+    "item.curiosities.jukebox_minecart": "Minecart with Jukebox",
 
     "block.curiosities.phasing_block": "Phasing Block",
     "block.curiosities.angel_block": "Angel Block",
@@ -31,6 +33,7 @@
     "block.curiosities.red_elevator": "Red Elevator",
     "block.curiosities.black_elevator": "Black Elevator",
 
+    "entity.curiosities.jukebox_minecart": "Minecart with Jukebox",
 
     "subtitles.curiosities.block.phasing.pop_out": "Block vanishes",
     "subtitles.curiosities.block.phasing.pop_in": "Block pops in"

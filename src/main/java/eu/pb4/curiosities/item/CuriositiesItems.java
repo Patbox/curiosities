@@ -1,16 +1,22 @@
 package eu.pb4.curiosities.item;
 
 import eu.pb4.curiosities.block.CuriositiesBlocks;
+import eu.pb4.curiosities.entity.CuriositiesEntities;
 import eu.pb4.curiosities.item.block.AngelBlockItem;
 import eu.pb4.curiosities.item.block.PhaserItem;
 import eu.pb4.curiosities.item.tool.CraftingSlateItem;
+import eu.pb4.curiosities.item.tool.PolymerMinecartItem;
 import eu.pb4.curiosities.item.tool.SlimeBucketItem;
+import eu.pb4.curiosities.mixin.LevelLightEngineAccessor;
 import eu.pb4.curiosities.other.CuriositiesUtils;
+import eu.pb4.curiosities.other.EntityLightEngine;
 import eu.pb4.factorytools.api.item.FactoryBlockItem;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
+import eu.pb4.polymer.core.api.block.PolymerBlockUtils;
 import eu.pb4.polymer.core.api.item.PolymerItemGroupUtils;
 import eu.pb4.polymer.core.api.item.SimplePolymerItem;
 import net.minecraft.core.Registry;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -18,7 +24,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Util;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.level.block.Block;
@@ -31,9 +39,10 @@ import static eu.pb4.curiosities.ModInit.id;
 
 public interface CuriositiesItems {
     Item PHASER = register("phaser", PhaserItem::new);
-    Item CRAFTING_SLATE = register("crafting_slate",  new Item.Properties().stacksTo(1), CraftingSlateItem::new);
-    Item SLIME_BOOTS = register("slime_boots",  new Item.Properties().humanoidArmor(CuriositiesArmorMaterials.SLIME, ArmorType.BOOTS), SimplePolymerItem::new);
-
+    Item CRAFTING_SLATE = register("crafting_slate", new Item.Properties().stacksTo(1), CraftingSlateItem::new);
+    Item SLIME_BOOTS = register("slime_boots", new Item.Properties().humanoidArmor(CuriositiesArmorMaterials.SLIME, ArmorType.BOOTS), SimplePolymerItem::new);
+    Item MINING_HELMET = register("mining_helmet", new Item.Properties().humanoidArmor(CuriositiesArmorMaterials.MINING, ArmorType.HELMET), SimplePolymerItem::new);
+    Item JUKEBOX_MINECART = register("jukebox_minecart", new Item.Properties().stacksTo(1), x -> new PolymerMinecartItem(CuriositiesEntities.JUKEBOX_MINECART, x));
     Item SLIME_BUCKET = register("slime_bucket", new Item.Properties().stacksTo(1).component(DataComponents.BUCKET_ENTITY_DATA, CustomData.EMPTY),
             (properties) -> new SlimeBucketItem(EntityType.SLIME, properties));
 
@@ -68,7 +77,9 @@ public interface CuriositiesItems {
                     output.accept(PHASER);
                     output.accept(SLIME_BUCKET);
                     output.accept(CRAFTING_SLATE);
-                    //output.accept(SLIME_BOOTS);
+                    output.accept(SLIME_BOOTS);
+                    output.accept(MINING_HELMET);
+                    output.accept(JUKEBOX_MINECART);
                     output.accept(ANGEL_BLOCK);
                     output.accept(INVISIBLE_PRESSURE_PLATE);
                     output.accept(CROSS_RAIL);
@@ -79,5 +90,24 @@ public interface CuriositiesItems {
                     }
                 }).build()
         );
+
+        PolymerBlockUtils.SEND_LIGHT_UPDATE_PACKET.register((level, pos) -> {
+            var engine = (EntityLightEngine) ((LevelLightEngineAccessor) level.getLightEngine()).getBlockEngine();
+            if (engine == null) {
+                return false;
+            }
+
+            for (int x = -1; x <= 1; x++) {
+                for (int y = -1; y <= 1; y++) {
+                    for (int z = -1; z <= 1; z++) {
+                        if (engine.curiosities$hasLightUpdates(SectionPos.asLong(pos.x() + x, pos.y() + y, pos.z() + z))) {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        });
     }
 }

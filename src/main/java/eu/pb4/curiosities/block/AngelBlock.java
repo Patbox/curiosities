@@ -62,7 +62,7 @@ public class AngelBlock extends Block implements FactoryBlock, CustomBreakingPar
 
     public static final class Model extends BlockModel {
         public Model(BlockState state) {
-            var base = ItemDisplayElementUtil.createSimple(state.getBlock().asItem());
+            var base = ItemDisplayElementUtil.createSolid(state.getBlock().asItem());
             base.setScale(new Vector3f(2f));
             this.addElement(base);
         }

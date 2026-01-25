@@ -53,9 +53,9 @@ public class ElevatorBlock extends Block implements FactoryBlock, CustomBreaking
 
         var id = ((PropertiesAccessor) properties).getId().identifier();
 
-        this.model = ItemDisplayElementUtil.getModel(id.withPrefix("block/"));
-        this.modelForward = ItemDisplayElementUtil.getModel(id.withPrefix("block/").withSuffix("_forward"));
-        this.modelCorner = ItemDisplayElementUtil.getModel(id.withPrefix("block/").withSuffix("_corner"));
+        this.model = ItemDisplayElementUtil.getSolidModel(id.withPrefix("block/"));
+        this.modelForward = ItemDisplayElementUtil.getSolidModel(id.withPrefix("block/").withSuffix("_forward"));
+        this.modelCorner = ItemDisplayElementUtil.getSolidModel(id.withPrefix("block/").withSuffix("_corner"));
     }
 
     @Override

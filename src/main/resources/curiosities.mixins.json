@@ -3,6 +3,9 @@
   "package": "eu.pb4.curiosities.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "BlockLightEngineMixin",
+    "EntityMixin",
+    "LevelLightEngineAccessor",
     "LivingEntityMixin",
     "NewMinecartBehaviorMixin",
     "OldMinecartBehaviorMixin",

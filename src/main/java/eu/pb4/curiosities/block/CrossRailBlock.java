@@ -85,7 +85,7 @@ public class CrossRailBlock extends BaseRailBlock implements FactoryBlock, Polym
     }
 
     private static final class Model extends BlockModel {
-        private static final ItemStack MODEL = ItemDisplayElementUtil.getModel(id("block/cross_rail"));
+        private static final ItemStack MODEL = ItemDisplayElementUtil.getSolidModel(id("block/cross_rail"));
 
         public Model(BlockState state) {
             var base = ItemDisplayElementUtil.createSimple(MODEL);
