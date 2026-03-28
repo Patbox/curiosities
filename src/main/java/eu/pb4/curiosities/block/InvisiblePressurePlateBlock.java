@@ -8,10 +8,10 @@ import eu.pb4.polymer.core.api.block.PolymerBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
-import xyz.nucleoid.packettweaker.PacketContext;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 
 public class InvisiblePressurePlateBlock extends PressurePlateBlock implements PolymerTexturedBlock {
-    private static final BlockState STATE = PolymerBlockResourceUtils.requestEmpty(BlockModelType.ACTIVE_PRESSURE_PLATE);
+    private static final BlockState STATE = PolymerBlockResourceUtils.requestEmpty(BlockModelType.PRESSURE_PLATE_ACTIVE);
 
     public InvisiblePressurePlateBlock(Properties properties) {
         super(BlockSetType.STONE, properties);

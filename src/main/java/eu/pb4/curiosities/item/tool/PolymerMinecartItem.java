@@ -7,7 +7,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MinecartItem;
-import xyz.nucleoid.packettweaker.PacketContext;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 
 public class PolymerMinecartItem extends MinecartItem implements PolymerItem {
     public PolymerMinecartItem(EntityType<? extends AbstractMinecart> type, Properties properties) {

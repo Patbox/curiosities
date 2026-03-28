@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version "${loom_version}"
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
 	id "com.modrinth.minotaur" version "2.+"
 	id 'maven-publish'
 }
@@ -40,7 +40,7 @@ loom {
 			name = "Data Generation"
 			runDir = "build/datagen"
 			vmArg("-Dfabric-api.datagen")
-			vmArg("-Dfabric-api.datagen.modid=curiosities")
+			vmArg("-Dfabric-api.datagen.id=curiosities")
 			vmArg("-Dfabric-api.datagen.output-dir=${file("src/main/generated")}")
 		}
 	}
@@ -60,24 +60,20 @@ sourceSets {
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings loom.layered {
-		officialMojangMappings()
-		parchment("org.parchmentmc.data:parchment-1.21.10:2025.10.12@zip")
-	}
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modImplementation "eu.pb4:polymer-core:${project.polymer_version}"
-	modImplementation "eu.pb4:polymer-blocks:${project.polymer_version}"
-	modImplementation "eu.pb4:polymer-resource-pack:${project.polymer_version}"
-	modImplementation "eu.pb4:polymer-resource-pack-extras:${project.polymer_version}"
-	modImplementation "eu.pb4:polymer-virtual-entity:${project.polymer_version}"
-	modImplementation "eu.pb4:polymer-autohost:${project.polymer_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	implementation "eu.pb4:polymer-core:${project.polymer_version}"
+	implementation "eu.pb4:polymer-blocks:${project.polymer_version}"
+	implementation "eu.pb4:polymer-resource-pack:${project.polymer_version}"
+	implementation "eu.pb4:polymer-resource-pack-extras:${project.polymer_version}"
+	implementation "eu.pb4:polymer-virtual-entity:${project.polymer_version}"
+	implementation "eu.pb4:polymer-autohost:${project.polymer_version}"
 
-	modImplementation include('eu.pb4:common-protection-api:1.0.0')
-	modImplementation include("eu.pb4:sgui:${project.sgui_version}")
-	modImplementation include("eu.pb4:factorytools:${project.factory_tools_version}")
+	implementation include('eu.pb4:common-protection-api:2.0.0')
+	implementation include("eu.pb4:sgui:${project.sgui_version}")
+	implementation include("eu.pb4:factorytools:${project.factory_tools_version}")
 }
 
 processResources {
@@ -89,7 +85,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 21
+	it.options.release = 25
 }
 
 java {
@@ -98,8 +94,8 @@ java {
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {
@@ -134,17 +130,17 @@ if (System.getenv("MODRINTH")) {
 		projectId = 'fyJKRz1B'// The ID of your modrinth project, slugs will not work.
 		versionNumber = "" + version // The version of the mod to upload.
 		versionType = "release"
-		uploadFile = remapJar // This links to a task that builds your mod jar and sets "uploadFile" to the mod jar.
+		uploadFile = jar // This links to a task that builds your mod jar and sets "uploadFile" to the mod jar.
 		gameVersions = [((String) project.minecraft_version)]
 		changelog = System.getenv("CHANGELOG")
-		loaders = ["fabric"/*, "quilt"*/]
+		loaders = ["fabric"]
 
 		dependencies {
 			required.project "polymer"
 		}
 	}
 
-	remapJar {
+	jar {
 		finalizedBy project.tasks.modrinth
 	}
 }

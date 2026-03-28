@@ -2,28 +2,29 @@ package eu.pb4.curiosities.datagen;
 
 import eu.pb4.curiosities.item.CuriositiesItemTags;
 import eu.pb4.curiosities.item.CuriositiesItems;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.TransmuteRecipeBuilder;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 
 class RecipesProvider extends FabricRecipeProvider {
 
 
-    public RecipesProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+    public RecipesProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 
@@ -37,6 +38,8 @@ class RecipesProvider extends FabricRecipeProvider {
         return new RecipeProvider(provider, recipeOutput) {
             @Override
             public void buildRecipes() {
+                List<Item> dyes = List.of(Items.BLACK_DYE, Items.BLUE_DYE, Items.BROWN_DYE, Items.CYAN_DYE, Items.GRAY_DYE, Items.GREEN_DYE, Items.LIGHT_BLUE_DYE, Items.LIGHT_GRAY_DYE, Items.LIME_DYE, Items.MAGENTA_DYE, Items.ORANGE_DYE, Items.PINK_DYE, Items.PURPLE_DYE, Items.RED_DYE, Items.YELLOW_DYE, Items.WHITE_DYE);
+
                 this.shaped(RecipeCategory.MISC, CuriositiesItems.PHASER, 2)
                         .pattern("rgr")
                         .pattern("gpg")
@@ -119,9 +122,9 @@ class RecipesProvider extends FabricRecipeProvider {
                             .save(recipeOutput);
 
                     var elevators = this.tag(CuriositiesItemTags.ELEVATORS);
-                    for (var dye : DyeColor.values()) {
-                        var dyeItem = DyeItem.byColor(dye);
-                        TransmuteRecipeBuilder.transmute(RecipeCategory.TRANSPORTATION, elevators, Ingredient.of(dyeItem), CuriositiesItems.COLORED_ELEVATOR.get(dye)).group("elevator_dye").unlockedBy(getHasName(DyeItem.byColor(dye)), this.has(dyeItem)).save(this.output);
+                    for (var dyeItem : dyes) {
+                        var dye = DyeColor.byName(dyeItem.builtInRegistryHolder().key().identifier().getPath().replace("_dye", ""), null);
+                        TransmuteRecipeBuilder.transmute(RecipeCategory.TRANSPORTATION, elevators, Ingredient.of(dyeItem), CuriositiesItems.COLORED_ELEVATOR.get(dye)).group("elevator_dye").unlockedBy(getHasName(dyeItem), this.has(dyeItem)).save(this.output);
                     }
                 }
             }

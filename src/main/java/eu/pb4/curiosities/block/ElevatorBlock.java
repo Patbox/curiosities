@@ -6,13 +6,17 @@ import eu.pb4.curiosities.other.CuriositiesSoundEvents;
 import eu.pb4.curiosities.other.OptionalDirection8;
 import eu.pb4.factorytools.api.block.CustomBreakingParticleBlock;
 import eu.pb4.factorytools.api.block.FactoryBlock;
+import eu.pb4.factorytools.api.util.LazyItemStack;
 import eu.pb4.factorytools.api.virtualentity.BlockModel;
 import eu.pb4.factorytools.api.virtualentity.ItemDisplayElementUtil;
+import eu.pb4.polymer.resourcepack.extras.api.ResourcePackExtras;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockAwareAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.HolderAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -25,6 +29,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Relative;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -35,27 +41,31 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import xyz.nucleoid.packettweaker.PacketContext;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 
 import java.util.Set;
 
 public class ElevatorBlock extends Block implements FactoryBlock, CustomBreakingParticleBlock {
     public static final EnumProperty<OptionalDirection8> FACING = EnumProperty.create("facing", OptionalDirection8.class);
 
-    private ParticleOptions breakingParticle;
-    private final ItemStack model;
-    private final ItemStack modelForward;
-    private final ItemStack modelCorner;
+    private final ParticleOptions breakingParticle;
+    private final LazyItemStack model;
+    private final LazyItemStack modelForward;
+    private final LazyItemStack modelCorner;
 
     public ElevatorBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, OptionalDirection8.NONE));
 
-        var id = ((PropertiesAccessor) properties).getId().identifier();
+        var id = properties.blockIdOrThrow().identifier();
 
-        this.model = ItemDisplayElementUtil.getSolidModel(id.withPrefix("block/"));
-        this.modelForward = ItemDisplayElementUtil.getSolidModel(id.withPrefix("block/").withSuffix("_forward"));
-        this.modelCorner = ItemDisplayElementUtil.getSolidModel(id.withPrefix("block/").withSuffix("_corner"));
+        this.model = ItemDisplayElementUtil.getModel(id.withPrefix("block/"));
+        this.modelForward = ItemDisplayElementUtil.getModel(id.withPrefix("block/").withSuffix("_forward"));
+        this.modelCorner = ItemDisplayElementUtil.getModel(id.withPrefix("block/").withSuffix("_corner"));
+
+        var p = DataComponentPatch.builder();
+        p.set(DataComponents.ITEM_MODEL, ResourcePackExtras.bridgeModel(properties.blockIdOrThrow().identifier().withPrefix("block/")));
+        this.breakingParticle = new ItemParticleOption(ParticleTypes.ITEM, new ItemStackTemplate(Items.STONE, p.build()));
     }
 
     @Override
@@ -132,9 +142,6 @@ public class ElevatorBlock extends Block implements FactoryBlock, CustomBreaking
 
     @Override
     public ParticleOptions getBreakingParticle(BlockState blockState) {
-        if (this.breakingParticle == null) {
-            this.breakingParticle = new ItemParticleOption(ParticleTypes.ITEM, ItemDisplayElementUtil.getModel(this.asItem()));
-        }
         return this.breakingParticle;
     }
 
@@ -168,11 +175,11 @@ public class ElevatorBlock extends Block implements FactoryBlock, CustomBreaking
         private void updateModel(BlockState state) {
             var dir = state.getValue(FACING);
             if (dir == OptionalDirection8.NONE) {
-                this.base.setItem(model);
+                this.base.setItem(model.get());
                 this.base.setYaw(0);
                 return;
             }
-            this.base.setItem(dir.isForward() ? modelForward : modelCorner);
+            this.base.setItem(dir.isForward() ? modelForward.get() : modelCorner.get());
             this.base.setYaw(dir.getModelYaw());
         }
     }

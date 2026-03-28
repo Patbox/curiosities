@@ -13,7 +13,7 @@ import eu.pb4.curiosities.other.EntityLightEngine;
 import eu.pb4.factorytools.api.item.FactoryBlockItem;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
 import eu.pb4.polymer.core.api.block.PolymerBlockUtils;
-import eu.pb4.polymer.core.api.item.PolymerItemGroupUtils;
+import eu.pb4.polymer.core.api.item.PolymerCreativeModeTabUtils;
 import eu.pb4.polymer.core.api.item.SimplePolymerItem;
 import net.minecraft.core.Registry;
 import net.minecraft.core.SectionPos;
@@ -70,7 +70,7 @@ public interface CuriositiesItems {
     }
 
     static void init() {
-        PolymerItemGroupUtils.registerPolymerItemGroup(id("main"), PolymerItemGroupUtils.builder()
+        PolymerCreativeModeTabUtils.registerPolymerCreativeModeTab(id("main"), PolymerCreativeModeTabUtils.builder()
                 .icon(CuriositiesItems.PHASER::getDefaultInstance)
                 .title(Component.literal("Curiosities"))
                 .displayItems((parameters, output) -> {

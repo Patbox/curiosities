@@ -13,7 +13,7 @@ import eu.pb4.polymer.resourcepack.extras.api.format.item.property.bool.CustomMo
 import eu.pb4.polymer.resourcepack.extras.api.format.item.property.select.DisplayContextProperty;
 import eu.pb4.polymer.resourcepack.extras.api.format.model.ModelAsset;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -38,7 +38,7 @@ import java.util.function.BiConsumer;
 import static eu.pb4.curiosities.ModInit.id;
 
 
-record CustomAssetProvider(FabricDataOutput output) implements DataProvider {
+record CustomAssetProvider(FabricPackOutput output) implements DataProvider {
 
     @Override
     public CompletableFuture<?> run(CachedOutput cachedOutput) {
@@ -106,18 +106,18 @@ record CustomAssetProvider(FabricDataOutput output) implements DataProvider {
         for (var variant : new String[] {"", "_forward", "_corner"}) {
             writer.accept("assets/curiosities/models/block/elevator" + variant + ".json", ModelAsset.builder()
                     .parent(Identifier.withDefaultNamespace("block/cube_bottom_top"))
-                    .texture("top", "curiosities:block/elevator_top" + variant)
-                    .texture("side", "curiosities:block/elevator_side")
-                    .texture("bottom", "curiosities:block/elevator_top")
+                    .texture("top", id("block/elevator_top" + variant))
+                    .texture("side", id("block/elevator_side"))
+                    .texture("bottom", id("block/elevator_top"))
                     .build().toBytes()
             );
 
             for (var color : DyeColor.values()) {
                 writer.accept("assets/curiosities/models/block/" + color.getSerializedName() + "_elevator" + variant + ".json", ModelAsset.builder()
                         .parent(Identifier.withDefaultNamespace("block/cube_bottom_top"))
-                        .texture("top", "curiosities:block/elevator_top" + variant + "_" + color.getSerializedName())
-                        .texture("side", "curiosities:block/elevator_side_" + color.getSerializedName())
-                        .texture("bottom", "curiosities:block/elevator_top_" + color.getSerializedName())
+                        .texture("top", id("block/elevator_top" + variant + "_" + color.getSerializedName()))
+                        .texture("side", id("block/elevator_side_" + color.getSerializedName()))
+                        .texture("bottom", id("block/elevator_top_" + color.getSerializedName()))
                         .build().toBytes()
                 );
             }

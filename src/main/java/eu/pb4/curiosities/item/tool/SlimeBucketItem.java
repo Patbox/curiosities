@@ -4,8 +4,10 @@ import eu.pb4.curiosities.item.CuriositiesDataComponents;
 import eu.pb4.curiosities.other.CuriositiesSoundEvents;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -25,7 +27,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.levelgen.WorldgenRandom;
 import org.jetbrains.annotations.Nullable;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 
@@ -96,7 +97,7 @@ public class SlimeBucketItem extends Item implements PolymerItem {
 
         var chunkPos = entity.chunkPosition();
 
-        if (WorldgenRandom.seedSlimeChunk(chunkPos.x, chunkPos.z, level.getSeed(), 987234911L).nextInt(10) == 0) {
+        if (WorldgenRandom.seedSlimeChunk(chunkPos.x(), chunkPos.z(), level.getSeed(), 987234911L).nextInt(10) == 0) {
             stack.set(CuriositiesDataComponents.SLIME_ACTIVE, Unit.INSTANCE);
         } else {
             stack.remove(CuriositiesDataComponents.SLIME_ACTIVE);
@@ -109,8 +110,8 @@ public class SlimeBucketItem extends Item implements PolymerItem {
     }
 
     @Override
-    public void modifyBasePolymerItemStack(ItemStack out, ItemStack stack, PacketContext context) {
-        PolymerItem.super.modifyBasePolymerItemStack(out, stack, context);
+    public void modifyBasePolymerItemStack(ItemStack out, ItemStack stack, PacketContext context, HolderLookup.Provider lookup) {
+        PolymerItem.super.modifyBasePolymerItemStack(out, stack, context, lookup);
         out.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(), List.of(stack.has(CuriositiesDataComponents.SLIME_ACTIVE)), List.of(), List.of()));
     }
 }

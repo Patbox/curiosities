@@ -11,6 +11,9 @@ playable with vanilla clients.
 - Phasing Blocks (and Phaser) - Blocks that when clicked or powered by redstone, vanish for 5 seconds. 
 - Elevators - Move up and down by jumping / sneaking on them. They only move you to other elevators of the same colors.
   Can be dyed (via crafting) and have set facing direction (clicking on top of the block).
+- Slime Boots - Entity wearing them will bounce like on a Slime Block, preventing fall damage (by damaging the boots).
+- Mining Helmet - When worn, entity will emit light level of 10.
+- Minecart with Jukebox - As the name says, Minecart that can play music!
 - Angel Block - Block that can be placed in air and drops directly into inventory when broken.
 - Cross Rail - Rail block that allows Minecarts to pass in both directions.
 - Invisible Pressure Plate - Well, that's clear isn't it?

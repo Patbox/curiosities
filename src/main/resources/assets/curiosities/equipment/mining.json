@@ -4,6 +4,11 @@
       {
         "texture": "curiosities:mining"
       }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "curiosities:mining"
+      }
     ]
   }
 }

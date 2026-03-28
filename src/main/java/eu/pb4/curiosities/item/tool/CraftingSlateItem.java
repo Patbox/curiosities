@@ -65,7 +65,7 @@ public class CraftingSlateItem extends SimplePolymerItem {
 
             @Override
             public Component getDisplayName() {
-                return CraftingSlateItem.this.getName();
+                return CraftingSlateItem.this.getName(player.getItemInHand(hand));
             }
 
             @Override

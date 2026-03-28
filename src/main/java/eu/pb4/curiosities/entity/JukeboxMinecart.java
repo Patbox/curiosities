@@ -34,7 +34,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.ticks.ContainerSingleItem;
 import org.jspecify.annotations.Nullable;
-import xyz.nucleoid.packettweaker.PacketContext;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 
 import java.util.Optional;
 
@@ -59,7 +59,7 @@ public class JukeboxMinecart extends AbstractMinecart implements PolymerEntity, 
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 pos) {
         if (this.musicDisc.isEmpty()) {
             var stack = player.getItemInHand(hand);
             if (!stack.has(DataComponents.JUKEBOX_PLAYABLE)) {
@@ -168,7 +168,7 @@ public class JukeboxMinecart extends AbstractMinecart implements PolymerEntity, 
             this.song = null;
             return;
         }
-        var song = jukeboxPlayable.song().unwrap(this.registryAccess()).orElse(null);
+        var song = jukeboxPlayable.song();
         if (this.song != song) {
             this.musicHandler.stopPlaying();
             this.tickCount = -1;
@@ -203,7 +203,7 @@ public class JukeboxMinecart extends AbstractMinecart implements PolymerEntity, 
         public void startPlaying(JukeboxSong song) {
             this.stopPlaying();
             this.addElement(this.audioSource);
-            this.sendPacket(VirtualEntityUtils.createPlaySoundFromEntityPacket(this.audioSource.getEntityId(), song.soundEvent(), SoundSource.RECORDS, 4.0F, 1.0F, RandomSource.create().nextLong()));
+            this.sendPacket(VirtualEntityUtils.createClientboundSoundEntityPacket(this.audioSource.getEntityId(), song.soundEvent(), SoundSource.RECORDS, 4.0F, 1.0F, RandomSource.create().nextLong()));
             this.sendPacket(new ClientboundSystemChatPacket(song.description(), true));
         }
 
